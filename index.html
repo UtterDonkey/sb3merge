@@ -1,9 +1,29 @@
 <!doctype html>
 <html>
+  <head>
+   <style>
+   * { font-family: "Helvetica Neue", "Arial"; font-weight: 2; font-size: 17px }
+   a { color: grey; text-decoration: none }
+   a:hover { color: black; }
+   body { margin: 50px auto 40px auto; width: 450px; }
+   h1 { font-size: 50px; margin: 0 }
+   h2 { font-size: 30px; margin: 0 }
+   hr { border: 1px solid grey; }
+   input[type=file]::file-selector-button, button 
+   {
+   padding: .2em .4em;
+   border-radius: .2em;
+   border: 1px solid grey;
+   color: black;
+   }
+   input[type=file]::file-selector-button:hover, button:hover { border: 1px solid black; }
+   pre { font-family: "monospace"; font-size: 20px; }
+   </style>
+  </head>
   <body>
     <h1>Project Merge</h1>
     <hr>
-	<p>Choose the larger file as Project 1 and the smaller as Project 2.</p>
+    <p>Project Merge is an obviously named tool to merge two <a href='https://scratch.mit.edu'>Scratch</a> 3 projects together. Choose the larger file as Project 1 and the smaller as Project 2 for better results.</p>
     Project 1: 
     <br><input type='file' accept='.sb3' name='p1' id="p1"><br>
     <br><p id="p1t" hidden></p>
@@ -12,9 +32,11 @@
     <input type='file' accept='.sb3' name='p2' id="p2"><br>
     <br><p id="p2t" hidden></p>
     <br><button id="mergeevent">Merge!</button>
-	<label><br><br>Ye logs:</label>
+    <h2><br>Credits</h2>
+    <p>Project Merge was made by <a href="https://github.com/themysticsavages">themysticsavages</a> from pure HTML, CSS, and ES6 JavaScript.</p>
+    <label>Logs:</label>
     <pre id="final"></pre>
-	<hr>
+    <hr>
   </body>
   <script type="text/javascript">
   const fileSelector = document.getElementById('p1');
@@ -43,6 +65,7 @@
   })
   </script>
   <script type="text/javascript">
+  console.log('Hello there, kind fellow. There is nothing to see here - except of course - fancy JSON objects for debugging and clear errors that don\'t get catched. This is here for anyone wants to help with this project. (https://github.com/ajskateboarder/sb3merge)')
   function download(filename, text) 
   {
 	var element = document.createElement('a');
@@ -57,7 +80,7 @@
   }
   document.getElementById('mergeevent').onclick = function() 
   {
-	var zip = (a,b) => a.map((x,i) => [x,b[i]]);
+	var zip = (a,b) => a.map((x,i) => [x,b[i]])
     var [p1t, p2t, e, logs, seen, ft] = 
 	[
 		JSON.parse(document.getElementById('p1t').innerText), 
@@ -72,7 +95,7 @@
 		const t2 = p2t[index]
 		if (JSON.stringify(t1) === JSON.stringify(t2)) 
 		{
-			logs.innerText = logs.innerText + 'No differences\n'
+			logs.innerText = logs.innerText + '[LOG] No differences. Merging target 1\n'
 			ft.push(JSON.stringify(t1))
 		}
 		else
@@ -83,36 +106,31 @@
 				else 
 				{
 					seen = true
-					logs.innerText = logs.innerText + 'Stage found\n'
+					logs.innerText = logs.innerText + '[LOG] Stage found. Merging target 1\n'
 					ft.push(JSON.stringify(t1))
 				}
 			else
 			{
-				try
+				if (t1['name'] === t2['name'] && t1['blocks'] != t2['blocks'])
 				{
-					if (t1['name'] === t2['name'] && t1['blocks'] != t2['blocks']) 
-					{
-						logs.innerText = logs.innerText + 'Same sprite name but different code; Combining\n'
-						var [b1, b2] = [t1['blocks'], t2['blocks']]
-						delete obj['blocks']
-						Object.assign(obj, {'blocks': { b1, b2 }})
-						ft.push(JSON.stringify(obj))
-					}
-					else
-					{
-						logs.innerText = logs.innerText + 'Absolute difference; Adding both\n'
-						ft.push(JSON.stringify(t1), JSON.stringify(t2))
-					}
-				}
-				catch (err)
-				{
-					return
+					var [b1, b2] = [t1['blocks'], t2['blocks']]
+					var pobj = t1
+					var json = {}
+
+					delete pobj['blocks']
+					Object.assign(json, b1)
+					Object.assign(json, b2)
+
+					pobj['blocks'] = json
+					logs.innerText = logs.innerText + '[LOG] Similar sprite names found but different code. Merging both targets into one\n'
+					console.log(json)
+					ft.push(JSON.stringify(pobj))
 				}
 			}
 		}
 	})
-	logs.innerText = logs.innerText + "{'targets': ["+ft+"]}" + '\n'
-	download('project.json', `{"targets": [${ft}], "monitors":[],"extensions":[],"meta":{"semver":"3.0.0","vm":"0.2.0-prerelease.20190904154449","agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15 QQBrowserLite/1.2.8"}}`.replace(/\,(?!\s*?[\{\[\"\'\w])/g, ''))
+	logs.innerText = logs.innerText + '[LOG] Downloading\n'
+	download('project.sb3', `{"targets": [${ft}], "monitors":[],"extensions":[],"meta":{"semver":"3.0.0","vm":"0.2.0-prerelease.20190904154449","agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15 QQBrowserLite/1.2.8"}}`.replace(/\,(?!\s*?[\{\[\"\'\w])/g, ''))
   }
   </script>
 </html>
