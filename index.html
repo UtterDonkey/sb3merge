@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Project Merge</h1>
+    <hr>
+	<p>Choose the larger file as Project 1 and the smaller as Project 2.</p>
+    Project 1: 
+    <br><input type='file' accept='.sb3' name='p1' id="p1"><br>
+    <br><p id="p1t" hidden></p>
+    Project 2:
+    <br>
+    <input type='file' accept='.sb3' name='p2' id="p2"><br>
+    <br><p id="p2t" hidden></p>
+    <br><button id="mergeevent">Merge!</button>
+	<label><br><br>Ye logs:</label>
+    <pre id="final"></pre>
+	<hr>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/json5/0.5.1/json5.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  const fileSelector = document.getElementById('p1');
+  fileSelector.addEventListener('change', (event) => {
+    const content = document.querySelector('#p1t');
+    const [file] = document.querySelector('#p1').files;
+    const reader = new FileReader();
+
+    reader.addEventListener("load", () => {
+      content.innerText = JSON.stringify(JSON.parse(reader.result)['targets'])
+    }, false)
+    if (file) reader.readAsText(file)
+  })
+  </script>
+  <script type="text/javascript">
+  const fileSelector2 = document.getElementById('p2')
+  fileSelector2.addEventListener('change', (event) => {
+    const content = document.querySelector('#p2t')
+    const [file] = document.querySelector('#p2').files
+    const reader = new FileReader()
+
+    reader.addEventListener("load", () => {
+      content.innerText = JSON.stringify((JSON.parse(reader.result)['targets']))
+    }, false)
+    if (file) reader.readAsText(file)
+  })
+  </script>
+  <script type="text/javascript">
+  function download(filename, text) 
+  {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	element.setAttribute('download', filename);
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+	document.body.removeChild(element);
+  }
+  document.getElementById('mergeevent').onclick = function() 
+  {
+	var zip = (a,b) => a.map((x,i) => [x,b[i]]);
+    var [p1t, p2t, e, logs, seen, ft] = 
+	[
+		JSON.parse(document.getElementById('p1t').innerText), 
+		JSON.parse(document.getElementById('p2t').innerText),
+		document.getElementById('overopt'),
+		document.getElementById('final'),
+		false,
+		[]
+	]
+	logs.innerText = ''
+	p1t.forEach((t1, index) => {
+		const t2 = p2t[index]
+		if (JSON.stringify(t1) === JSON.stringify(t2)) 
+		{
+			logs.innerText = logs.innerText + 'No differences\n'
+			ft.push(JSON.stringify(t1))
+		}
+		else
+		{ 
+			if (t1['name'] === 'Stage')
+				if (seen === true) 
+					return
+				else 
+				{
+					seen = true
+					logs.innerText = logs.innerText + 'Stage found\n'
+					ft.push(JSON.stringify(t1))
+				}
+			else
+			{
+				logs.innerText = logs.innerText + 'Difference found; adding both\n'
+				ft.push(JSON.stringify(t1), JSON.stringify(t2))
+			}
+		}
+	})
+	logs.innerText = logs.innerText + "{'targets': ["+ft+"]}" + '\n'
+	download('project.json', `{"targets": [${ft}], "monitors":[],"extensions":[],"meta":{"semver":"3.0.0","vm":"0.2.0-prerelease.20190904154449","agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15 QQBrowserLite/1.2.8"}}`.replace(/\,(?!\s*?[\{\[\"\'\w])/g, ''))
+  }
+  </script>
+</html>
