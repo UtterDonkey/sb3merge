@@ -111,23 +111,28 @@
 				}
 			else
 			{
-				if (t1['name'] === t2['name'] && t1['blocks'] != t2['blocks'])
+				try 
 				{
-					var [b1, b2] = [t1['blocks'], t2['blocks']]
-					var pobj = t1
-					var json = {}
+					if (t1['name'] === t2['name'] && t1['blocks'] != t2['blocks'])
+					{
+						var [b1, b2] = [t1['blocks'], t2['blocks']]
+						var pobj = t1
+						var json = {}
 
-					delete pobj['blocks']
-					Object.assign(json, b1)
-					Object.assign(json, b2)
+						delete pobj['blocks']
+						Object.assign(json, b1)
+						Object.assign(json, b2)
 
-					pobj['blocks'] = json
-					logs.innerText = logs.innerText + '[LOG] Similar sprite names found but different code. Merging both targets into one\n'
-					console.log(json)
-					ft.push(JSON.stringify(pobj))
+						pobj['blocks'] = json
+						logs.innerText = logs.innerText + '[LOG] Similar sprite names found but different code. Merging both targets into one\n'
+						console.log(json)
+						ft.push(JSON.stringify(pobj))
+					}
+					else
+						ft.push(JSON.stringify(t1), JSON.stringify(t2))
 				}
-				else
-					ft.push(JSON.stringify(t1), JSON.stringify(t2))
+				catch(err)
+					return
 			}
 		}
 	})
