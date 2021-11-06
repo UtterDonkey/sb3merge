@@ -9,10 +9,7 @@ function mergeJSON(p1, p2) {
 	p1f.forEach((t1, index) => {
 		const t2 = p2f[index]
 		if (JSON.stringify(t1) === JSON.stringify(t2)) 
-		{
-			logs.innerText = logs.innerText + '[LOG] No differences. Merging target 1\n'
 			ft.push(JSON.stringify(t1))
-		}
 		else
 		{ 
 			if (t1['name'] === 'Stage')
@@ -21,7 +18,6 @@ function mergeJSON(p1, p2) {
 				else 
 				{
 					seen = true
-					logs.innerText = logs.innerText + '[LOG] Stage found. Merging target 1\n'
 					ft.push(JSON.stringify(t1))
 				}
 			else
@@ -37,8 +33,6 @@ function mergeJSON(p1, p2) {
 					Object.assign(json, b2)
 
 					pobj['blocks'] = json
-					logs.innerText = logs.innerText + '[LOG] Similar sprite names found but different code. Merging both targets into one\n'
-					console.log(json)
 					ft.push(JSON.stringify(pobj))
 				}
 			}
