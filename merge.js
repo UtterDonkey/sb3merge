@@ -5,9 +5,9 @@
  * @returns {string} string - JSON representation which can be parsed
  */
 function mergeJSON(p1, p2) {
-	var ft = []
-	p1.forEach((t1, index) => {
-		const t2 = p2[index]
+	var [ft, p1f, p2f] = [[], p1['targets'], p2['targets']]
+	p1f.forEach((t1, index) => {
+		const t2 = p2f[index]
 		if (JSON.stringify(t1) === JSON.stringify(t2)) 
 		{
 			logs.innerText = logs.innerText + '[LOG] No differences. Merging target 1\n'
