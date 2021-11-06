@@ -35,6 +35,8 @@ function mergeJSON(p1, p2) {
 					pobj['blocks'] = json
 					ft.push(JSON.stringify(pobj))
 				}
+				else
+					ft.push(JSON.stringify(t1), JSON.stringify(t2))
 			}
 		}
 	})
