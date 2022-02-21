@@ -33,11 +33,11 @@
     <hr>
     <p>Project Merge is an obviously named tool to merge two <a href='https://scratch.mit.edu'>Scratch</a> 3 projects together. Choose the larger file as Project 1 and the smaller as Project 2 for better results.</p>
     Project 1: 
-    <br><input type='file' accept='.sb3' name='p1' id="p1"><br>
+    <br><input type='file' accept='.sb3,.json' name='p1' id="p1"><br>
     <br><p id="p1t" hidden></p>
     Project 2:
     <br>
-    <input type='file' accept='.sb3' name='p2' id="p2"><br>
+    <input type='file' accept='.sb3,.json' name='p2' id="p2"><br>
     <br><p id="p2t" hidden></p>
     <br><button id="mergeevent">Merge!</button>
     <h2><br>Credits</h2>
@@ -144,7 +144,7 @@
 		}
 	})
 	logs.innerText = logs.innerText + '[LOG] Downloading\n'
-	download('project.sb3', `{"targets": [${ft}], "monitors":[],"extensions":[],"meta":{"semver":"3.0.0","vm":"0.2.0-prerelease.20190904154449","agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15 QQBrowserLite/1.2.8"}}`.replace(/\,(?!\s*?[\{\[\"\'\w])/g, ''))
+	download(`project.${test = document.getElementById('p1').value.split('.')[test = document.getElementById('p1').value.split('.'.length - 1]}`, `{"targets": [${ft}], "monitors":[],"extensions":[],"meta":{"semver":"3.0.0","vm":"0.2.0-prerelease.20190904154449","agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15 QQBrowserLite/1.2.8"}}`.replace(/\,(?!\s*?[\{\[\"\'\w])/g, ''))
   }
   </script>
 </html>
